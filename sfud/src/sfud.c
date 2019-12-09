@@ -65,8 +65,7 @@ static const sfud_qspi_flash_ext_info qspi_flash_ext_info_table[] = SFUD_FLASH_E
 
 static sfud_err software_init(const sfud_flash *flash);
 static sfud_err hardware_init(sfud_flash *flash);
-static sfud_err page256_or_1_byte_write(const sfud_flash *flash, uint32_t addr, size_t size, uint16_t write_gran,
-                                        const uint8_t *data);
+static sfud_err page256_or_1_byte_write(const sfud_flash *flash, uint32_t addr, size_t size, uint16_t write_gran, const uint8_t *data);
 static sfud_err aai_write(const sfud_flash *flash, uint32_t addr, size_t size, const uint8_t *data);
 static sfud_err wait_busy(const sfud_flash *flash);
 static sfud_err reset(const sfud_flash *flash);
@@ -96,6 +95,7 @@ sfud_err sfud_device_init(sfud_flash *flash)
     {
         result = software_init(flash);
     }
+
     if (result == SFUD_SUCCESS)
     {
         flash->init_ok = true;
@@ -122,6 +122,7 @@ sfud_err sfud_init(void)
 
     SFUD_DEBUG("Start initialize Serial Flash Universal Driver(SFUD) V%s.", SFUD_SW_VERSION);
     SFUD_DEBUG("You can get the latest version on https://github.com/armink/SFUD .");
+    
     /* initialize all flash device in flash device table */
     for (i = 0; i < sizeof(flash_table) / sizeof(sfud_flash); i++)
     {
@@ -178,26 +179,25 @@ const sfud_flash *sfud_get_device_table(void)
 }
 
 #ifdef SFUD_USING_QSPI
-static void qspi_set_read_cmd_format(sfud_flash *flash, uint8_t ins, uint8_t ins_lines, uint8_t addr_lines,
-                                     uint8_t dummy_cycles, uint8_t data_lines)
+static void qspi_set_read_cmd_format(sfud_flash *flash, uint8_t ins, uint8_t ins_lines, uint8_t addr_lines, uint8_t dummy_cycles, uint8_t data_lines)
 {
     /* if medium size greater than 16Mb, use 4-Byte address, instruction should be added one */
     if (flash->chip.capacity <= 0x1000000)
     {
-        flash->read_cmd_format.instruction = ins;
+        flash->read_cmd_format.instruction  = ins;
         flash->read_cmd_format.address_size = 24;
     }
     else
     {
-        flash->read_cmd_format.instruction = ins + 1;
+        flash->read_cmd_format.instruction  = ins + 1;
         flash->read_cmd_format.address_size = 32;
     }
 
-    flash->read_cmd_format.instruction_lines = ins_lines;
-    flash->read_cmd_format.address_lines = addr_lines;
+    flash->read_cmd_format.instruction_lines     = ins_lines;
+    flash->read_cmd_format.address_lines         = addr_lines;
     flash->read_cmd_format.alternate_bytes_lines = 0;
-    flash->read_cmd_format.dummy_cycles = dummy_cycles;
-    flash->read_cmd_format.data_lines = data_lines;
+    flash->read_cmd_format.dummy_cycles          = dummy_cycles;
+    flash->read_cmd_format.data_lines            = data_lines;
 }
 
 /**
@@ -308,11 +308,13 @@ static sfud_err hardware_init(sfud_flash *flash)
 
 #ifdef SFUD_USING_SFDP
         extern bool sfud_read_sfdp(sfud_flash * flash);
+        
         /* read SFDP parameters */
         if (sfud_read_sfdp(flash))
         {
-            flash->chip.name = NULL;
+            flash->chip.name     = NULL;
             flash->chip.capacity = flash->sfdp.capacity;
+            
             /* only 1 byte or 256 bytes write mode for SFDP */
             if (flash->sfdp.write_gran == 1)
             {
@@ -322,14 +324,15 @@ static sfud_err hardware_init(sfud_flash *flash)
             {
                 flash->chip.write_mode = SFUD_WM_PAGE_256B;
             }
+            
             /* find the the smallest erase sector size for eraser. then will use this size for erase granularity */
-            flash->chip.erase_gran = flash->sfdp.eraser[0].size;
+            flash->chip.erase_gran     = flash->sfdp.eraser[0].size;
             flash->chip.erase_gran_cmd = flash->sfdp.eraser[0].cmd;
             for (i = 1; i < SFUD_SFDP_ERASE_TYPE_MAX_NUM; i++)
             {
                 if (flash->sfdp.eraser[i].size != 0 && flash->chip.erase_gran > flash->sfdp.eraser[i].size)
                 {
-                    flash->chip.erase_gran = flash->sfdp.eraser[i].size;
+                    flash->chip.erase_gran     = flash->sfdp.eraser[i].size;
                     flash->chip.erase_gran_cmd = flash->sfdp.eraser[i].cmd;
                 }
             }
@@ -344,10 +347,10 @@ static sfud_err hardware_init(sfud_flash *flash)
             {
                 if ((flash_chip_table[i].mf_id == flash->chip.mf_id) && (flash_chip_table[i].type_id == flash->chip.type_id) && (flash_chip_table[i].capacity_id == flash->chip.capacity_id))
                 {
-                    flash->chip.name = flash_chip_table[i].name;
-                    flash->chip.capacity = flash_chip_table[i].capacity;
-                    flash->chip.write_mode = flash_chip_table[i].write_mode;
-                    flash->chip.erase_gran = flash_chip_table[i].erase_gran;
+                    flash->chip.name           = flash_chip_table[i].name;
+                    flash->chip.capacity       = flash_chip_table[i].capacity;
+                    flash->chip.write_mode     = flash_chip_table[i].write_mode;
+                    flash->chip.erase_gran     = flash_chip_table[i].erase_gran;
                     flash->chip.erase_gran_cmd = flash_chip_table[i].erase_gran_cmd;
                     break;
                 }
@@ -379,8 +382,7 @@ static sfud_err hardware_init(sfud_flash *flash)
         /* print manufacturer and flash chip name */
         if (flash_mf_name && flash->chip.name)
         {
-            SFUD_INFO("Find a %s %s flash chip. Size is %ld bytes.", flash_mf_name, flash->chip.name,
-                      flash->chip.capacity);
+            SFUD_INFO("Find a %s %s flash chip. Size is %ld bytes.", flash_mf_name, flash->chip.name, flash->chip.capacity);
         }
         else if (flash_mf_name)
         {

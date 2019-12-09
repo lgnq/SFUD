@@ -137,8 +137,7 @@ static bool read_sfdp_header(sfud_flash *flash)
         SFUD_INFO("Error: This reversion(V%d.%d) SFDP is not supported.", sfdp->major_rev, sfdp->minor_rev);
         return false;
     }
-    SFUD_DEBUG("Check SFDP header is OK. The reversion is V%d.%d, NPN is %d.", sfdp->major_rev, sfdp->minor_rev,
-               header[6]);
+    SFUD_DEBUG("Check SFDP header is OK. The reversion is V%d.%d, NPN is %d.", sfdp->major_rev, sfdp->minor_rev, header[6]);
 
     return true;
 }
@@ -220,8 +219,7 @@ static bool read_basic_table(sfud_flash *flash, sfdp_para_header *basic_header)
     SFUD_DEBUG("MSB-LSB  3    2    1    0");
     for (i = 0; i < BASIC_TABLE_LEN; i++)
     {
-        SFUD_DEBUG("[%04d] 0x%02X 0x%02X 0x%02X 0x%02X", i + 1, table[i * 4 + 3], table[i * 4 + 2], table[i * 4 + 1],
-                   table[i * 4]);
+        SFUD_DEBUG("[%04d] 0x%02X 0x%02X 0x%02X 0x%02X", i + 1, table[i * 4 + 3], table[i * 4 + 2], table[i * 4 + 1], table[i * 4]);
     }
 
     /* get block/sector 4 KB erase supported and command */
@@ -334,8 +332,7 @@ static bool read_basic_table(sfud_flash *flash, sfdp_para_header *basic_header)
         {
             sfdp->eraser[j].size = 1L << table[28 + 2 * i];
             sfdp->eraser[j].cmd = table[28 + 2 * i + 1];
-            SFUD_DEBUG("Flash device supports %ldKB block erase. Command is 0x%02X.", sfdp->eraser[j].size / 1024,
-                       sfdp->eraser[j].cmd);
+            SFUD_DEBUG("Flash device supports %ldKB block erase. Command is 0x%02X.", sfdp->eraser[j].size / 1024, sfdp->eraser[j].cmd);
             j++;
         }
     }
@@ -349,12 +346,12 @@ static bool read_basic_table(sfud_flash *flash, sfdp_para_header *basic_header)
                 if (sfdp->eraser[j].size != 0 && sfdp->eraser[i].size > sfdp->eraser[j].size)
                 {
                     /* swap the small eraser */
-                    uint32_t temp_size = sfdp->eraser[i].size;
-                    uint8_t temp_cmd = sfdp->eraser[i].cmd;
+                    uint32_t temp_size   = sfdp->eraser[i].size;
+                    uint8_t temp_cmd     = sfdp->eraser[i].cmd;
                     sfdp->eraser[i].size = sfdp->eraser[j].size;
-                    sfdp->eraser[i].cmd = sfdp->eraser[j].cmd;
+                    sfdp->eraser[i].cmd  = sfdp->eraser[j].cmd;
                     sfdp->eraser[j].size = temp_size;
-                    sfdp->eraser[j].cmd = temp_cmd;
+                    sfdp->eraser[j].cmd  = temp_cmd;
                 }
             }
         }
@@ -366,7 +363,8 @@ static bool read_basic_table(sfud_flash *flash, sfdp_para_header *basic_header)
 
 static sfud_err read_sfdp_data(const sfud_flash *flash, uint32_t addr, uint8_t *read_buf, size_t size)
 {
-    uint8_t cmd[] = {
+    uint8_t cmd[] = 
+    {
         SFUD_CMD_READ_SFDP_REGISTER,
         (addr >> 16) & 0xFF,
         (addr >> 8) & 0xFF,
