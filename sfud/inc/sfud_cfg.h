@@ -35,14 +35,15 @@
 
 #define SFUD_USING_FLASH_INFO_TABLE
 
-enum {
+enum
+{
     SFUD_XXXX_DEVICE_INDEX = 0,
 };
 
-#define SFUD_FLASH_DEVICE_TABLE                                                \
-{                                                                              \
-    [SFUD_XXXX_DEVICE_INDEX] = {.name = "XXXX", .spi.name = "SPIX"},           \
-}
+#define SFUD_FLASH_DEVICE_TABLE                                          \
+    {                                                                    \
+        [SFUD_XXXX_DEVICE_INDEX] = {.name = "XXXX", .spi.name = "SPIX"}, \
+    }
 
 #define SFUD_USING_QSPI
 

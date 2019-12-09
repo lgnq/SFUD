@@ -37,7 +37,8 @@ void sfud_log_debug(const char *file, const long line, const char *format, ...);
  * SPI write data then read data
  */
 static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, size_t write_size, uint8_t *read_buf,
-        size_t read_size) {
+                               size_t read_size)
+{
     sfud_err result = SFUD_SUCCESS;
     uint8_t send_data, read_data;
 
@@ -53,7 +54,8 @@ static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, si
  * read flash data by QSPI
  */
 static sfud_err qspi_read(const struct __sfud_spi *spi, uint32_t addr, sfud_qspi_read_cmd_format *qspi_read_cmd_format,
-        uint8_t *read_buf, size_t read_size) {
+                          uint8_t *read_buf, size_t read_size)
+{
     sfud_err result = SFUD_SUCCESS;
 
     /**
@@ -64,7 +66,8 @@ static sfud_err qspi_read(const struct __sfud_spi *spi, uint32_t addr, sfud_qspi
 }
 #endif /* SFUD_USING_QSPI */
 
-sfud_err sfud_spi_port_init(sfud_flash *flash) {
+sfud_err sfud_spi_port_init(sfud_flash *flash)
+{
     sfud_err result = SFUD_SUCCESS;
 
     /**
@@ -93,7 +96,8 @@ sfud_err sfud_spi_port_init(sfud_flash *flash) {
  * @param format output format
  * @param ... args
  */
-void sfud_log_debug(const char *file, const long line, const char *format, ...) {
+void sfud_log_debug(const char *file, const long line, const char *format, ...)
+{
     va_list args;
 
     /* args point to the first variable parameter */
@@ -111,7 +115,8 @@ void sfud_log_debug(const char *file, const long line, const char *format, ...) 
  * @param format output format
  * @param ... args
  */
-void sfud_log_info(const char *format, ...) {
+void sfud_log_info(const char *format, ...)
+{
     va_list args;
 
     /* args point to the first variable parameter */
