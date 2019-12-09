@@ -80,43 +80,43 @@ extern "C"
 #endif
 
 /* SFUD support manufacturer JEDEC ID */
-#define SFUD_MF_ID_CYPRESS 0x01
-#define SFUD_MF_ID_FUJITSU 0x04
-#define SFUD_MF_ID_EON 0x1C
-#define SFUD_MF_ID_ATMEL 0x1F
-#define SFUD_MF_ID_MICRON 0x20
-#define SFUD_MF_ID_AMIC 0x37
-#define SFUD_MF_ID_SANYO 0x62
-#define SFUD_MF_ID_INTEL 0x89
-#define SFUD_MF_ID_ESMT 0x8C
-#define SFUD_MF_ID_FUDAN 0xA1
-#define SFUD_MF_ID_HYUNDAI 0xAD
-#define SFUD_MF_ID_SST 0xBF
-#define SFUD_MF_ID_MICRONIX 0xC2
-#define SFUD_MF_ID_GIGADEVICE 0xC8
-#define SFUD_MF_ID_ISSI 0xD5
-#define SFUD_MF_ID_WINBOND 0xEF
+#define SFUD_MF_ID_CYPRESS      0x01
+#define SFUD_MF_ID_FUJITSU      0x04
+#define SFUD_MF_ID_EON          0x1C
+#define SFUD_MF_ID_ATMEL        0x1F
+#define SFUD_MF_ID_MICRON       0x20
+#define SFUD_MF_ID_AMIC         0x37
+#define SFUD_MF_ID_SANYO        0x62
+#define SFUD_MF_ID_INTEL        0x89
+#define SFUD_MF_ID_ESMT         0x8C
+#define SFUD_MF_ID_FUDAN        0xA1
+#define SFUD_MF_ID_HYUNDAI      0xAD
+#define SFUD_MF_ID_SST          0xBF
+#define SFUD_MF_ID_MICRONIX     0xC2
+#define SFUD_MF_ID_GIGADEVICE   0xC8
+#define SFUD_MF_ID_ISSI         0xD5
+#define SFUD_MF_ID_WINBOND      0xEF
 
 /* SFUD supported manufacturer information table */
 #define SFUD_MF_TABLE                              \
-    {                                              \
-        {"Cypress", SFUD_MF_ID_CYPRESS},           \
-            {"Fujitsu", SFUD_MF_ID_FUJITSU},       \
-            {"EON", SFUD_MF_ID_EON},               \
-            {"Atmel", SFUD_MF_ID_ATMEL},           \
-            {"Micron", SFUD_MF_ID_MICRON},         \
-            {"AMIC", SFUD_MF_ID_AMIC},             \
-            {"Sanyo", SFUD_MF_ID_SANYO},           \
-            {"Intel", SFUD_MF_ID_INTEL},           \
-            {"ESMT", SFUD_MF_ID_ESMT},             \
-            {"Fudan", SFUD_MF_ID_FUDAN},           \
-            {"Hyundai", SFUD_MF_ID_HYUNDAI},       \
-            {"SST", SFUD_MF_ID_SST},               \
-            {"GigaDevice", SFUD_MF_ID_GIGADEVICE}, \
-            {"ISSI", SFUD_MF_ID_ISSI},             \
-            {"Winbond", SFUD_MF_ID_WINBOND},       \
-            {"Micronix", SFUD_MF_ID_MICRONIX},     \
-    }
+{                                                  \
+    {"Cypress",     SFUD_MF_ID_CYPRESS},           \
+    {"Fujitsu",     SFUD_MF_ID_FUJITSU},           \
+    {"EON",         SFUD_MF_ID_EON},               \
+    {"Atmel",       SFUD_MF_ID_ATMEL},             \
+    {"Micron",      SFUD_MF_ID_MICRON},            \
+    {"AMIC",        SFUD_MF_ID_AMIC},              \
+    {"Sanyo",       SFUD_MF_ID_SANYO},             \
+    {"Intel",       SFUD_MF_ID_INTEL},             \
+    {"ESMT",        SFUD_MF_ID_ESMT},              \
+    {"Fudan",       SFUD_MF_ID_FUDAN},             \
+    {"Hyundai",     SFUD_MF_ID_HYUNDAI},           \
+    {"SST",         SFUD_MF_ID_SST},               \
+    {"GigaDevice",  SFUD_MF_ID_GIGADEVICE},        \
+    {"ISSI",        SFUD_MF_ID_ISSI},              \
+    {"Winbond",     SFUD_MF_ID_WINBOND},           \
+    {"Micronix",    SFUD_MF_ID_MICRONIX},          \
+}
 
 #ifdef SFUD_USING_FLASH_INFO_TABLE
 /* SFUD supported flash chip information table. If the flash not support JEDEC JESD216 standard,
