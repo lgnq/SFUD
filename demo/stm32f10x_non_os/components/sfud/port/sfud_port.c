@@ -31,7 +31,8 @@
 #include <stdio.h>
 #include <stm32f10x_conf.h>
 
-typedef struct {
+typedef struct
+{
     SPI_TypeDef *spix;
     GPIO_TypeDef *cs_gpiox;
     uint16_t cs_gpio_pin;
@@ -41,20 +42,26 @@ static char log_buf[256];
 
 void sfud_log_debug(const char *file, const long line, const char *format, ...);
 
-static void rcc_configuration(spi_user_data_t spi) {
-    if (spi->spix == SPI1) {
+static void rcc_configuration(spi_user_data_t spi)
+{
+    if (spi->spix == SPI1)
+    {
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-    } else if (spi->spix == SPI2) {
+    }
+    else if (spi->spix == SPI2)
+    {
         /* you can add SPI2 code here */
     }
 }
 
-static void gpio_configuration(spi_user_data_t spi) {
+static void gpio_configuration(spi_user_data_t spi)
+{
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    if (spi->spix == SPI1) {
+    if (spi->spix == SPI1)
+    {
         /* SCK:PA5  MISO:PA6  MOSI:PA7 */
         GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -66,24 +73,27 @@ static void gpio_configuration(spi_user_data_t spi) {
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
         GPIO_Init(GPIOC, &GPIO_InitStructure);
         GPIO_SetBits(GPIOC, GPIO_Pin_4);
-    } else if (spi->spix == SPI2) {
+    }
+    else if (spi->spix == SPI2)
+    {
         /* you can add SPI2 code here */
     }
 }
 
-static void spi_configuration(spi_user_data_t spi) {
+static void spi_configuration(spi_user_data_t spi)
+{
     SPI_InitTypeDef SPI_InitStructure;
 
-    SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex; //SPI ÉèÖÃÎªË«ÏßË«ÏòÈ«Ë«¹¤
-    SPI_InitStructure.SPI_Mode = SPI_Mode_Master;                      //ÉèÖÃÎªÖ÷ SPI
-    SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;                  //SPI ·¢ËÍ½ÓÊÕ 8 Î»Ö¡½á¹¹
-    SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;                         //Ê±ÖÓÐü¿ÕµÍ
-    SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;                       //Êý¾Ý²¶»ñÓÚµÚÒ»¸öÊ±ÖÓÑØ
-    //TODO ÒÔºó¿ÉÒÔ³¢ÊÔÓ²¼þ CS
-    SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;                          //ÄÚ²¿  NSS ÐÅºÅÓÉ SSI Î»¿ØÖÆ
-    SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2; //²¨ÌØÂÊÔ¤·ÖÆµÖµÎª 2
-    SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;                 //Êý¾Ý´«Êä´Ó MSB Î»¿ªÊ¼
-    SPI_InitStructure.SPI_CRCPolynomial = 7;                           // CRC Öµ¼ÆËãµÄ¶àÏîÊ½
+    SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex; //SPI ï¿½ï¿½ï¿½ï¿½ÎªË«ï¿½ï¿½Ë«ï¿½ï¿½È«Ë«ï¿½ï¿½
+    SPI_InitStructure.SPI_Mode = SPI_Mode_Master;                      //ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ SPI
+    SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;                  //SPI ï¿½ï¿½ï¿½Í½ï¿½ï¿½ï¿½ 8 Î»Ö¡ï¿½á¹¹
+    SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;                         //Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½
+    SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;                       //ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½ï¿½Úµï¿½Ò»ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+    //TODO ï¿½Ôºï¿½ï¿½ï¿½Ô³ï¿½ï¿½ï¿½Ó²ï¿½ï¿½ CS
+    SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;                          //ï¿½Ú²ï¿½  NSS ï¿½Åºï¿½ï¿½ï¿½ SSI Î»ï¿½ï¿½ï¿½ï¿½
+    SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ÆµÖµÎª 2
+    SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;                 //ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ MSB Î»ï¿½ï¿½Ê¼
+    SPI_InitStructure.SPI_CRCPolynomial = 7;                           // CRC Öµï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Ê½
 
     SPI_I2S_DeInit(spi->spix);
     SPI_Init(spi->spix, &SPI_InitStructure);
@@ -92,11 +102,13 @@ static void spi_configuration(spi_user_data_t spi) {
     SPI_Cmd(spi->spix, ENABLE);
 }
 
-static void spi_lock(const sfud_spi *spi) {
+static void spi_lock(const sfud_spi *spi)
+{
     __disable_irq();
 }
 
-static void spi_unlock(const sfud_spi *spi) {
+static void spi_unlock(const sfud_spi *spi)
+{
     __enable_irq();
 }
 
@@ -104,47 +116,59 @@ static void spi_unlock(const sfud_spi *spi) {
  * SPI write data then read data
  */
 static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf, size_t write_size, uint8_t *read_buf,
-        size_t read_size) {
+                               size_t read_size)
+{
     sfud_err result = SFUD_SUCCESS;
     uint8_t send_data, read_data;
-    spi_user_data_t spi_dev = (spi_user_data_t) spi->user_data;
+    spi_user_data_t spi_dev = (spi_user_data_t)spi->user_data;
 
-    if (write_size) {
+    if (write_size)
+    {
         SFUD_ASSERT(write_buf);
     }
-    if (read_size) {
+    if (read_size)
+    {
         SFUD_ASSERT(read_buf);
     }
 
     GPIO_ResetBits(spi_dev->cs_gpiox, spi_dev->cs_gpio_pin);
-    /* ¿ªÊ¼¶ÁÐ´Êý¾Ý */
-    for (size_t i = 0, retry_times; i < write_size + read_size; i++) {
-        /* ÏÈÐ´»º³åÇøÖÐµÄÊý¾Ýµ½ SPI ×ÜÏß£¬Êý¾ÝÐ´Íêºó£¬ÔÙÐ´ dummy(0xFF) µ½ SPI ×ÜÏß */
-        if (i < write_size) {
+    /* ï¿½ï¿½Ê¼ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ */
+    for (size_t i = 0, retry_times; i < write_size + read_size; i++)
+    {
+        /* ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½Ýµï¿½ SPI ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ dummy(0xFF) ï¿½ï¿½ SPI ï¿½ï¿½ï¿½ï¿½ */
+        if (i < write_size)
+        {
             send_data = *write_buf++;
-        } else {
+        }
+        else
+        {
             send_data = SFUD_DUMMY_DATA;
         }
-        /* ·¢ËÍÊý¾Ý */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         retry_times = 1000;
-        while (SPI_I2S_GetFlagStatus(spi_dev->spix, SPI_I2S_FLAG_TXE) == RESET) {
+        while (SPI_I2S_GetFlagStatus(spi_dev->spix, SPI_I2S_FLAG_TXE) == RESET)
+        {
             SFUD_RETRY_PROCESS(NULL, retry_times, result);
         }
-        if (result != SFUD_SUCCESS) {
+        if (result != SFUD_SUCCESS)
+        {
             goto exit;
         }
         SPI_I2S_SendData(spi_dev->spix, send_data);
-        /* ½ÓÊÕÊý¾Ý */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         retry_times = 1000;
-        while (SPI_I2S_GetFlagStatus(spi_dev->spix, SPI_I2S_FLAG_RXNE) == RESET) {
+        while (SPI_I2S_GetFlagStatus(spi_dev->spix, SPI_I2S_FLAG_RXNE) == RESET)
+        {
             SFUD_RETRY_PROCESS(NULL, retry_times, result);
         }
-        if (result != SFUD_SUCCESS) {
+        if (result != SFUD_SUCCESS)
+        {
             goto exit;
         }
         read_data = SPI_I2S_ReceiveData(spi_dev->spix);
-        /* Ð´»º³åÇøÖÐµÄÊý¾Ý·¢Íêºó£¬ÔÙ¶ÁÈ¡ SPI ×ÜÏßÖÐµÄÊý¾Ýµ½¶Á»º³åÇø */
-        if (i >= write_size) {
+        /* Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½È¡ SPI ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+        if (i >= write_size)
+        {
             *read_buf++ = read_data;
         }
     }
@@ -156,24 +180,30 @@ exit:
 }
 
 /* about 100 microsecond delay */
-static void retry_delay_100us(void) {
+static void retry_delay_100us(void)
+{
     uint32_t delay = 120;
-    while(delay--);
+    while (delay--)
+        ;
 }
 
-static spi_user_data spi1 = { .spix = SPI1, .cs_gpiox = GPIOC, .cs_gpio_pin = GPIO_Pin_4 };
-sfud_err sfud_spi_port_init(sfud_flash *flash) {
+static spi_user_data spi1 = {.spix = SPI1, .cs_gpiox = GPIOC, .cs_gpio_pin = GPIO_Pin_4};
+sfud_err sfud_spi_port_init(sfud_flash *flash)
+{
     sfud_err result = SFUD_SUCCESS;
 
-    switch (flash->index) {
-    case SFUD_SST25_DEVICE_INDEX: {
-        /* RCC ³õÊ¼»¯ */
+    switch (flash->index)
+    {
+    case SFUD_SST25_DEVICE_INDEX:
+    {
+        /* RCC ï¿½ï¿½Ê¼ï¿½ï¿½ */
         rcc_configuration(&spi1);
-        /* GPIO ³õÊ¼»¯ */
+        /* GPIO ï¿½ï¿½Ê¼ï¿½ï¿½ */
         gpio_configuration(&spi1);
-        /* SPI ÍâÉè³õÊ¼»¯ */
+        /* SPI ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ */
         spi_configuration(&spi1);
-        /* Í¬²½ Flash ÒÆÖ²ËùÐèµÄ½Ó¿Ú¼°Êý¾Ý */
+        
+        /* Í¬ï¿½ï¿½ Flash ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½Ä½Ó¿Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½ */
         flash->spi.wr = spi_write_read;
         flash->spi.lock = spi_lock;
         flash->spi.unlock = spi_unlock;
@@ -198,7 +228,8 @@ sfud_err sfud_spi_port_init(sfud_flash *flash) {
  * @param format output format
  * @param ... args
  */
-void sfud_log_debug(const char *file, const long line, const char *format, ...) {
+void sfud_log_debug(const char *file, const long line, const char *format, ...)
+{
     va_list args;
 
     /* args point to the first variable parameter */
@@ -216,7 +247,8 @@ void sfud_log_debug(const char *file, const long line, const char *format, ...) 
  * @param format output format
  * @param ... args
  */
-void sfud_log_info(const char *format, ...) {
+void sfud_log_info(const char *format, ...)
+{
     va_list args;
 
     /* args point to the first variable parameter */

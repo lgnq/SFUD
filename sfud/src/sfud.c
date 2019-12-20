@@ -611,8 +611,8 @@ sfud_err sfud_erase(const sfud_flash *flash, uint32_t addr, size_t size)
         if (flash->sfdp.available)
         {
             /* get the suitable eraser for erase process from SFDP parameter */
-            eraser_index = sfud_sfdp_get_suitable_eraser(flash, addr, size);
-            cur_erase_cmd = flash->sfdp.eraser[eraser_index].cmd;
+            eraser_index   = sfud_sfdp_get_suitable_eraser(flash, addr, size);
+            cur_erase_cmd  = flash->sfdp.eraser[eraser_index].cmd;
             cur_erase_size = flash->sfdp.eraser[eraser_index].size;
         }
         else
@@ -620,7 +620,7 @@ sfud_err sfud_erase(const sfud_flash *flash, uint32_t addr, size_t size)
 #else
         {
 #endif
-            cur_erase_cmd = flash->chip.erase_gran_cmd;
+            cur_erase_cmd  = flash->chip.erase_gran_cmd;
             cur_erase_size = flash->chip.erase_gran;
         }
         /* set the flash write enable */
@@ -1000,11 +1000,10 @@ static sfud_err read_jedec_id(sfud_flash *flash)
     result = spi->wr(spi, cmd_data, sizeof(cmd_data), recv_data, sizeof(recv_data));
     if (result == SFUD_SUCCESS)
     {
-        flash->chip.mf_id = recv_data[0];
-        flash->chip.type_id = recv_data[1];
+        flash->chip.mf_id       = recv_data[0];
+        flash->chip.type_id     = recv_data[1];
         flash->chip.capacity_id = recv_data[2];
-        SFUD_DEBUG("The flash device manufacturer ID is 0x%02X, memory type ID is 0x%02X, capacity ID is 0x%02X.",
-                   flash->chip.mf_id, flash->chip.type_id, flash->chip.capacity_id);
+        SFUD_DEBUG("The flash device manufacturer ID is 0x%02X, memory type ID is 0x%02X, capacity ID is 0x%02X.", flash->chip.mf_id, flash->chip.type_id, flash->chip.capacity_id);
     }
     else
     {

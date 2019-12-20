@@ -115,21 +115,21 @@ static bool read_sfdp_header(sfud_flash *flash)
     SFUD_ASSERT(flash);
 
     sfdp->available = false;
+
     /* read SFDP header */
     if (read_sfdp_data(flash, header_addr, header, sizeof(header)) != SFUD_SUCCESS)
     {
         SFUD_INFO("Error: Can't read SFDP header.");
         return false;
     }
+    
     /* check SFDP header */
-    if (!(header[0] == 'S' &&
-          header[1] == 'F' &&
-          header[2] == 'D' &&
-          header[3] == 'P'))
+    if (!(header[0] == 'S' && header[1] == 'F' && header[2] == 'D' && header[3] == 'P'))
     {
         SFUD_DEBUG("Error: Check SFDP signature error. It's must be 50444653h('S' 'F' 'D' 'P').");
         return false;
     }
+    
     sfdp->minor_rev = header[4];
     sfdp->major_rev = header[5];
     if (sfdp->major_rev > SUPPORT_MAX_SFDP_MAJOR_REV)
